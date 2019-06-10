@@ -29,6 +29,7 @@ EXPOSE 1883/tcp 8443/tcp
 
 WORKDIR /usr/local/mycontroller
 
+VOLUME /conf
 # fixes
 #RUN	chmod +x bin/start.sh
 

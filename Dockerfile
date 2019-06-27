@@ -16,21 +16,23 @@ WORKDIR /tmp
 # dependencies
 RUN apt-get update && apt-get install wget procps -y 
 
+RUN mkdir /mycontroller
+
 # install
 RUN wget $MYCONTROLLER_URL -O mycontroller.tar.gz \
-    && tar zxf mycontroller.tar.gz -C /usr/local \
+    && tar zxf mycontroller.tar.gz -C / \
     && rm -fR /tmp/*
 
 # add files
-COPY files/root/ /
+COPY files/root/mycontroller/conf/mycontroller.properties /mycontroller/conf/mycontroller.properties
 
 # expose mqtt and web
 EXPOSE 1883/tcp 8443/tcp
 
-WORKDIR /usr/local/mycontroller
+WORKDIR /mycontroller
 
-VOLUME /conf
+VOLUME /mycontroller/conf
 # fixes
 #RUN	chmod +x bin/start.sh
 
-ENTRYPOINT ["java","-Xms8m","-Xmx150m","-Dlogback.configurationFile=conf/logback.xml","-Dmc.conf.file=conf/mycontroller.properties","-cp","lib/*","org.mycontroller.standalone.StartApp",">> logs/mycontroller.log 2>&1"]
+ENTRYPOINT ["java","-Xms8m","-Xmx150m","-Dlogback.configurationFile=conf/logback.xml","-Dmc.conf.file=conf/mycontroller.properties","-cp","lib/*","org.mycontroller.standalone.StartApp","> conf/logs/mycontroller.log 2>&1"]

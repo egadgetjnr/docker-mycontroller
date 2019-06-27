@@ -23,13 +23,17 @@ RUN wget $MYCONTROLLER_URL -O mycontroller.tar.gz \
     && tar zxf mycontroller.tar.gz -C / \
     && rm -fR /tmp/*
 
-# add files
-COPY files/root/mycontroller/conf/mycontroller.properties /mycontroller/conf/mycontroller.properties
+
 
 # expose mqtt and web
 EXPOSE 1883/tcp 8443/tcp
 
 WORKDIR /mycontroller
+
+RUN rm conf/mycontroller.properties
+
+# add files
+COPY files/root/mycontroller/conf/mycontroller.properties conf/mycontroller.properties
 
 VOLUME /mycontroller/conf
 # fixes
